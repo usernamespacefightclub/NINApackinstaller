@@ -26,7 +26,7 @@ NINA **does not have a pre-built installer** (no Flatpak, no AppImage, no distro
 
 NINA needs Python 3, GTK 4, libadwaita, PyGObject (the bridge between Python and GTK), and `defusedxml`. Copy the command for your distro:
 
-**Fedora / Nobara**
+**Fedora**
 ```bash
 sudo dnf install python3-gobject gtk4 libadwaita python3-defusedxml
 ```
@@ -36,7 +36,7 @@ sudo dnf install python3-gobject gtk4 libadwaita python3-defusedxml
 sudo apt install python3-gi gir1.2-gtk-4.0 gir1.2-adw-1 python3-defusedxml
 ```
 
-**Arch / Manjaro / EndeavourOS**
+**Arch**
 ```bash
 sudo pacman -S python-gobject gtk4 libadwaita python-defusedxml
 ```
@@ -59,7 +59,7 @@ cd NINA
 
 Or, without git: on GitHub, click **Code → Download ZIP**, extract it, and enter the folder.
 
-## 3. Run it
+## 3. Test it
 
 Inside the NINA folder:
 
