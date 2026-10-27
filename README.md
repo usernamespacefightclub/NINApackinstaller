@@ -20,7 +20,7 @@ I'm also more than happy if an actual developer wants to jump in as a contributo
 
 # How to install
 
-NINA **does not have a pre-built installer** (no Flatpak, no AppImage, no distro package). You download the source code and run it directly: it's just Python. 
+NINA **does not have a pre-built installer** (no Flatpak, no AppImage, no distro package). You download the source code and run it directly: it's just Python.
 
 ## 1. Install the dependencies
 
@@ -73,7 +73,7 @@ To open a package directly:
 python3 gui.py /path/to/file.sims2pack
 ```
 
-## 4. Add NINA to the application menu
+## 4. (Optional) Add NINA to the application menu
 
 NINA is just a few Python files in a folder, so there's nothing to install. This step only creates a **shortcut** (a `.desktop` file) that points to the folder where you downloaded it, so NINA shows up in your app launcher and you don't have to open a terminal every time.
 
@@ -99,11 +99,11 @@ update-desktop-database ~/.local/share/applications
 
 NINA should now show up in your menu (usually under Games). If it doesn't, log out and back in. On KDE Plasma you can also run `kbuildsycoca6 --noincremental` to refresh the menu.
 
-If you prefer, you can skip the terminal and create the same shortcut by hand with your desktop's menu editor (on KDE: right-click the menu → *Edit Applications*). Use `python3 /full/path/to/NINA/gui.py` as the program.
+If you prefer, you can skip the terminal and create the same shortcut by hand with your desktop's menu editor (on KDE: right-click the menu → *Edit Applications*). Use `python3 /full/path/to/NINA/gui.py` as the program, and click the icon button to pick `NINA_PLACEHOLDER_ICON.png` from inside the NINA folder.
 
 **Important:** the shortcut points to the folder where NINA is. If you move or delete that folder, the shortcut breaks. Just redo this step (or remove the shortcut, see below).
 
-### Associate `.sims2pack` files with NINA
+### Associate `.sims2pack` files with NINA (also optional)
 
 This makes double-clicking a `.sims2pack` open NINA. The simplest way is to right-click any `.sims2pack` file → **Open With** → pick NINA → tick "Always". Your file manager does the rest.
 
@@ -201,7 +201,7 @@ Soon I'll open up ways to support me.
 
 Keep in mind that I made all of this over the course of a few months while suffering through the free tiers of Claude, Kimi, and Gemini.
 
-The available languages ​​were chosen based on empirical observation of which languages ​​are most common within the community, as well as through research. It is unlikely that any additional languages ​​will be added.
+The available languages were chosen based on empirical observation of which languages are most common within the community, as well as through research. It is unlikely that any additional languages will be added.
 
 I don't really know how GitHub works, so sorry if I did something wrong. Everything here looks confusing. That's why I encourage an actual programmer to fork or get the project transfred even more.
 
