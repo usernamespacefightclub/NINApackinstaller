@@ -24,7 +24,7 @@
 
 NINA is an independent reimplementation based on the file format specification. In other words: instead of taking the original code and just changing the language, the program was built from scratch by understanding how `.sims2pack` files are actually structured internally, and then recreating, in its own way, a smaller and simpler version focused on properly reading and installing these files, without all the extra weight of screens, dependencies, and side features.
 
-The utility is written in Python and uses libadwaita, with a modern interface and polished UX. It supports installing multiple packages at once. In testing, **one hundred** lots were installed in a single run without a single hiccup. (I have no idea what the actual limit is, so feel free to absolutely go nuts.)
+The utility is written in Python and uses libadwaita, with a modern interface and polished UX. It supports installing multiple packages at once. In testing, **one hundred** lots were installed in a single run without a single stutter. (I have no idea what the actual limit is, so feel free to absolutely go nuts.)
 
 ## Contents
 
