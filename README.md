@@ -82,14 +82,15 @@ Run this **from inside the NINA folder**. Nothing is installed system-wide, so n
 ```bash
 mkdir -p ~/.local/share/applications
 
-cat > ~/.local/share/applications/org.gnome.Nephilim.desktop <<EOF
+cat > ~/.local/share/applications/NINA.desktop <<EOF
 [Desktop Entry]
 Type=Application
-Name=NINA pack installer
+Name=NINA
 Comment=Install .Sims2Pack files into The Sims 2
-Exec=python3 "$PWD/gui.py" %F
+Exec=python3 $PWD/gui.py %F
 Icon=$PWD/NINA_PLACEHOLDER_ICON.png
 Terminal=false
+StartupNotify=true
 Categories=Game;
 MimeType=application/x-sims2pack;
 EOF
@@ -112,7 +113,7 @@ If you'd rather do it from the terminal, you first need to tell the system what 
 ```bash
 mkdir -p ~/.local/share/mime/packages
 
-cat > ~/.local/share/mime/packages/org.gnome.Nephilim.xml <<'EOF'
+cat > ~/.local/share/mime/packages/NINA.xml <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
   <mime-type type="application/x-sims2pack">
@@ -123,7 +124,7 @@ cat > ~/.local/share/mime/packages/org.gnome.Nephilim.xml <<'EOF'
 EOF
 
 update-mime-database ~/.local/share/mime
-xdg-mime default org.gnome.Nephilim.desktop application/x-sims2pack
+xdg-mime default NINA.desktop application/x-sims2pack
 ```
 
 On KDE you may see `qtpaths: command not found` after the last command. It's only a warning from `xdg-mime` and usually harmless. If double-clicking still doesn't open NINA, use the **Open With** method above.
@@ -140,14 +141,14 @@ There's nothing to uninstall: NINA is only the folder you downloaded plus the op
 2. Remove the menu shortcut:
 
 ```bash
-rm -f ~/.local/share/applications/org.gnome.Nephilim.desktop
+rm -f ~/.local/share/applications/NINA.desktop
 update-desktop-database ~/.local/share/applications
 ```
 
 3. If you did the optional `.sims2pack` association from the terminal, remove it too:
 
 ```bash
-rm -f ~/.local/share/mime/packages/org.gnome.Nephilim.xml
+rm -f ~/.local/share/mime/packages/NINA.xml
 update-mime-database ~/.local/share/mime
 ```
 
