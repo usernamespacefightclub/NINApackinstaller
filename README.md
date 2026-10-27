@@ -73,14 +73,14 @@ To open a package directly:
 python3 gui.py /path/to/file.sims2pack
 ```
 
-## 4. Add it to the application menu and associate `.sims2pack` files
+## 4. Add NINA to the application menu
 
-Run these commands **from inside the NINA folder**. They create three files in your user directory (nothing is installed system-wide, so you don't need `sudo`).
+NINA is just a few Python files in a folder, so there's nothing to install. This step only creates a **shortcut** (a `.desktop` file) that points to the folder where you downloaded it, so NINA shows up in your app launcher and you don't have to open a terminal every time.
+
+Run this **from inside the NINA folder**. Nothing is installed system-wide, so no `sudo`:
 
 ```bash
-mkdir -p ~/.local/share/applications ~/.local/share/mime/packages ~/.local/share/icons/hicolor/512x512/apps
-
-cp NINA_PLACEHOLDER_ICON.png ~/.local/share/icons/hicolor/512x512/apps/org.gnome.Nephilim.png
+mkdir -p ~/.local/share/applications
 
 cat > ~/.local/share/applications/org.gnome.Nephilim.desktop <<EOF
 [Desktop Entry]
@@ -88,11 +88,29 @@ Type=Application
 Name=NINA pack installer
 Comment=Install .Sims2Pack files into The Sims 2
 Exec=python3 "$PWD/gui.py" %F
-Icon=org.gnome.Nephilim
+Icon=$PWD/NINA_PLACEHOLDER_ICON.png
 Terminal=false
-Categories=Game;Utility;GTK;
+Categories=Game;
 MimeType=application/x-sims2pack;
 EOF
+
+update-desktop-database ~/.local/share/applications
+```
+
+NINA should now show up in your menu (usually under Games). If it doesn't, log out and back in. On KDE Plasma you can also run `kbuildsycoca6 --noincremental` to refresh the menu.
+
+If you prefer, you can skip the terminal and create the same shortcut by hand with your desktop's menu editor (on KDE: right-click the menu → *Edit Applications*). Use `python3 /full/path/to/NINA/gui.py` as the program.
+
+**Important:** the shortcut points to the folder where NINA is. If you move or delete that folder, the shortcut breaks. Just redo this step (or remove the shortcut, see below).
+
+### Associate `.sims2pack` files with NINA
+
+This makes double-clicking a `.sims2pack` open NINA. The simplest way is to right-click any `.sims2pack` file → **Open With** → pick NINA → tick "Always". Your file manager does the rest.
+
+If you'd rather do it from the terminal, you first need to tell the system what a `.sims2pack` is:
+
+```bash
+mkdir -p ~/.local/share/mime/packages
 
 cat > ~/.local/share/mime/packages/org.gnome.Nephilim.xml <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -105,33 +123,41 @@ cat > ~/.local/share/mime/packages/org.gnome.Nephilim.xml <<'EOF'
 EOF
 
 update-mime-database ~/.local/share/mime
-update-desktop-database ~/.local/share/applications
 xdg-mime default org.gnome.Nephilim.desktop application/x-sims2pack
-gtk-update-icon-cache -f -t ~/.local/share/icons/hicolor 2>/dev/null || true
 ```
 
-Done. NINA should now appear in your application menu and under **Open With** for `.sims2pack` files. If it doesn't, log out and back into your session.
-
-Important: the menu entry points to the folder where you downloaded NINA. **If you move or delete that folder, you need to repeat this step** (or remove the files as explained below).
+On KDE you may see `qtpaths: command not found` after the last command. It's only a warning from `xdg-mime` and usually harmless. If double-clicking still doesn't open NINA, use the **Open With** method above.
 
 ## Updating
 
-If you downloaded it with git, run `git pull` inside the folder. If you downloaded the ZIP, download it again and replace the folder (and repeat step 4 if you moved it somewhere else).
+If you downloaded it with git, run `git pull` inside the folder. If you downloaded the ZIP, download it again and replace the folder. The menu shortcut keeps working as long as the folder stays in the same place.
 
 ## Uninstalling
 
+There's nothing to uninstall: NINA is only the folder you downloaded plus the optional shortcut.
+
+1. Delete the NINA folder.
+2. Remove the menu shortcut:
+
 ```bash
 rm -f ~/.local/share/applications/org.gnome.Nephilim.desktop
-rm -f ~/.local/share/mime/packages/org.gnome.Nephilim.xml
-rm -f ~/.local/share/icons/hicolor/512x512/apps/org.gnome.Nephilim.png
-update-mime-database ~/.local/share/mime
 update-desktop-database ~/.local/share/applications
+```
+
+3. If you did the optional `.sims2pack` association from the terminal, remove it too:
+
+```bash
+rm -f ~/.local/share/mime/packages/org.gnome.Nephilim.xml
+update-mime-database ~/.local/share/mime
+```
+
+4. If you also want to erase your settings (including the Sims 2 path you selected):
+
+```bash
 rm -rf ~/.config/nephilim
 ```
 
-Then delete the NINA folder.
-
-The second-to-last command removes your settings (including the Sims 2 path you selected). Packages NINA has already installed into the game **stay there**: NINA does not uninstall them.
+Packages NINA has already installed into the game **stay there**: NINA does not uninstall them.
 
 ---
 
