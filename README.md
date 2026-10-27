@@ -18,7 +18,7 @@
 ---
 
 > [!NOTE]
-> This project is based on the work of the late great **Mootilda**. Nothing I did here would have been possible without the legacy of the original Clean Installer. She is the most important person here.
+> This project is based on the work of the late great **Mootilda**. Nothing I did here would have been possible without the legacy of the original [Clean Installer](https://modthesims.info/d/409950/sims2pack-clean-installer-v1-6-22-updated-aug-2-2014.html). She is the most important person here.
 
 ## About
 
@@ -44,7 +44,7 @@ The utility is written in Python and uses libadwaita, with a modern interface an
 
 So I strongly encourage people to fork this and keep working on it, because I honestly don't know how long I'll keep maintaining NINA myself.
 
-I used Claude, KIMI, and Gemini, plus the `AGENTS.md` **PONYTAIL** protocol.
+I used Claude, KIMI, and Gemini, plus the `AGENTS.md` [**PONYTAIL**](https://github.com/dietrichgebert/ponytail) protocol.
 
 I'm also more than happy if an actual developer wants to jump in as a contributor, because I have other projects for the game on Linux in mind for the future. Or fork it and continue as maintainer. I don't know how long I'll be able to do that by myself.
 
@@ -253,7 +253,7 @@ If a package contains something that changes the game's rules (a hack), NINA war
 
 ### What's the difference between this and Clean Installer?
 
-Sims2Pack Clean Installer (S2PCI) is the original tool, created by Karol Rybak in 2004 and later maintained by Mootilda until 2014. It is the program that taught the entire community how to install lots without making a mess of the game, and NINA would not exist without it.
+[Sims2Pack Clean Installer](https://modthesims.info/d/409950/sims2pack-clean-installer-v1-6-22-updated-aug-2-2014.html) (S2PCI) is the original tool, created by Karol Rybak in 2004 and later maintained by Mootilda until 2014. It is the program that taught the entire community how to install lots without making a mess of the game, and NINA would not exist without it.
 
 NINA is not a copy of it, nor is it a port: the AI understood how the file is structured internally and wrote a new program, my way.
 
