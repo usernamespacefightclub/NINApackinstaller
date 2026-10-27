@@ -73,7 +73,7 @@ To open a package directly:
 python3 gui.py /path/to/file.sims2pack
 ```
 
-## 4. (Optional) Add NINA to the application menu
+## 4. Add NINA to the application menu
 
 NINA is just a few Python files in a folder, so there's nothing to install. This step only creates a **shortcut** (a `.desktop` file) that points to the folder where you downloaded it, so NINA shows up in your app launcher and you don't have to open a terminal every time.
 
@@ -104,7 +104,7 @@ If you prefer, you can skip the terminal and create the same shortcut by hand wi
 
 **Important:** the shortcut points to the folder where NINA is. If you move or delete that folder, the shortcut breaks. Just redo this step (or remove the shortcut, see below).
 
-### Associate `.sims2pack` files with NINA (also optional)
+### Associate `.sims2pack` files with NINA
 
 This makes double-clicking a `.sims2pack` open NINA. The simplest way is to right-click any `.sims2pack` file → **Open With** → pick NINA → tick "Always". Your file manager does the rest.
 
