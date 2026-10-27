@@ -47,7 +47,7 @@ def load_config():
     """Load settings from ~/.config/nephilim/config.json."""
     default_cfg = {
         "sims2_prefix": None,
-        "default_install_mode": "keep-cc",
+        "default_install_mode": "clean",
         "color_scheme": "system",
         "ui_layout": "modern",
         "language": None,
@@ -1106,7 +1106,7 @@ class NephilimWindow(Adw.ApplicationWindow):
         primary_count = sum(1 for f in files if f.get("is_primary"))
         cc_count = len(files) - primary_count
 
-        default_mode = self.config.get("default_install_mode", "keep-cc")
+        default_mode = self.config.get("default_install_mode", "clean")
 
         return {
             "file_path": file_path,
