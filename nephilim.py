@@ -165,10 +165,15 @@ def parse_archive(source_path: str):
     return pkg_type, game_ver, files
 
 def install_files(source_path: str, files: list, prefix: str, mode: str,
-                   pkg_type: str = "", game_ver: str = "") -> dict:
+                   pkg_type: str = "", game_ver: str = "", *,
+                   fallback_to_first: bool = True) -> dict:
+    for f in files:
+        if not re.fullmatch(r"[0-9A-Fa-f]{32}", f.get("crc", "")):
+            raise ValueError("Invalid file CRC")
+
     primary_files = [f for f in files if f["is_primary"]]
     cc_files = [f for f in files if not f["is_primary"]]
-    if not primary_files and files:
+    if fallback_to_first and not primary_files and files:
         primary_files.append(files[0])
         cc_files = [f for f in cc_files if f is not files[0]]
 
@@ -202,16 +207,16 @@ def install_files(source_path: str, files: list, prefix: str, mode: str,
                     written_targets.append(target)
                     stream.seek(f["abs_offset"])
                     stream_copy(stream, out, f["length"])
-            teleport_count += 1
-            if f["is_hack"]:
-                hack_count += 1
-            installed_details.append({
-                "category": "teleport",
-                "name": f["name"],
-                "length": f["length"],
-                "target": f"{f['crc']}.Sims2Tmp",
-                "is_hack": f["is_hack"]
-            })
+                teleport_count += 1
+                if f["is_hack"]:
+                    hack_count += 1
+                installed_details.append({
+                    "category": "teleport",
+                    "name": f["name"],
+                    "length": f["length"],
+                    "target": f"{f['crc']}.Sims2Tmp",
+                    "is_hack": f["is_hack"]
+                })
 
             if primary_files:
                 p_crc = primary_files[0]["crc"]
