@@ -1280,7 +1280,7 @@ class NephilimWindow(Adw.ApplicationWindow):
             self._show_page("details")
 
     def _run_install(self, file_path, files, mode, progress_bar, install_button,
-                      pkg_type="", game_ver=""):
+                      pkg_type="", game_ver="", fallback_to_first=True):
         """Shared install runner for both modern and classic views."""
         prefix = self.config.get("sims2_prefix") or os.path.expanduser("~/EA Games/The Sims 2")
         self._install_in_progress = True
@@ -1290,7 +1290,8 @@ class NephilimWindow(Adw.ApplicationWindow):
 
         def do_install():
             try:
-                results = install_files(file_path, files, prefix, mode, pkg_type, game_ver)
+                results = install_files(file_path, files, prefix, mode, pkg_type, game_ver,
+                                        fallback_to_first=fallback_to_first)
             except Exception as e:
                 GLib.idle_add(lambda: self._install_failed(progress_bar, install_button, str(e)) if self._install_token == current_token else None)
                 return
@@ -1432,7 +1433,7 @@ class NephilimWindow(Adw.ApplicationWindow):
         mode = "keep-cc" if selected_has_cc else "clean"
         self._run_install(self.current_file_path, selected_files, mode,
                           self.classic_progress_bar, self.classic_btn_install,
-                          self.pkg_type, self.game_ver)
+                          self.pkg_type, self.game_ver, fallback_to_first=False)
 
 
 class NephilimApp(Adw.Application):
