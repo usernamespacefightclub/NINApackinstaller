@@ -373,7 +373,7 @@ def main():
                 print(f"  {Colors.DARK_GRAY}[🗑️ STRIPPED]{Colors.RESET} {d['name']} ({format_bytes(d['length'])})")
 
         print(f"\n{Colors.MAGENTA}=================================================================================")
-        print(f"{Colors.GREEN}                       🎉 Installation Finished Successfully!")
+        print(f"{Colors.GREEN}                        Installation Finished Successfully!")
         print(f"{Colors.CYAN}     Teleport Folder:    {results['teleport_count']} files installed")
         print(f"     Downloads Folder:   {results['downloads_count']} files installed")
         if results.get("skipped_files"):
