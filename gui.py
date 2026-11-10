@@ -177,6 +177,12 @@ class NephilimWindow(Adw.ApplicationWindow):
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         main_box.append(header_bar)
 
+        # Banner for behavior-mod warnings. Lives outside the pages so the
+        # progress-bar text (rewritten on every install click) can't erase it.
+        self.mod_banner = Adw.Banner(title="")
+        self._mod_banner_done = False
+        main_box.append(self.mod_banner)
+
         # View Stack for switching between views
         self.view_stack = Adw.ViewStack()
         self.view_stack.set_vexpand(True)
@@ -796,6 +802,8 @@ class NephilimWindow(Adw.ApplicationWindow):
     def _show_page(self, page_name: str):
         self.current_page = page_name
         self._update_header_bar()
+        if page_name != "details":
+            self.mod_banner.set_revealed(False)
 
         if page_name == "preferences":
             self.pref_row_prefix.set_subtitle(
@@ -900,9 +908,12 @@ class NephilimWindow(Adw.ApplicationWindow):
     def _on_row_mode_changed(self, combo_row, _gparam):
         if getattr(self, "_updating_ui_texts", False):
             return
+        if not self._install_in_progress:
+            self.install_button.set_sensitive(True)
         if 0 <= self._current_pkg_index < len(self.package_queue):
             new_mode = "keep-cc" if combo_row.get_selected() == 0 else "clean"
             self.package_queue[self._current_pkg_index]["mode"] = new_mode
+            self._show_mod_banner("banner_mods_before", self._count_mods(self.parsed_files, new_mode))
 
     def _on_pref_scheme_changed(self, radio_btn, scheme_name):
         if radio_btn.get_active():
@@ -1010,6 +1021,8 @@ class NephilimWindow(Adw.ApplicationWindow):
         self._update_classic_selection_summary()
 
     def _update_classic_selection_summary(self):
+        if not self._install_in_progress:
+            self.classic_btn_install.set_sensitive(True)
         total = self.classic_store.get_n_items()
         selected = sum(item.checked for item in self.classic_store)
         safe_ver = GLib.markup_escape_text(t(self.game_ver) if self.game_ver else t("msg_unknown"))
@@ -1265,6 +1278,7 @@ class NephilimWindow(Adw.ApplicationWindow):
 
         # Sync mode dropdown with this package's stored mode
         self.row_mode.set_selected(0 if pkg["mode"] == "keep-cc" else 1)
+        self._show_mod_banner("banner_mods_before", self._count_mods(pkg["files"], pkg["mode"]))
 
         self.progress_bar.set_fraction(0.0)
         self.progress_bar.set_text(t("status_ready_install"))
@@ -1278,6 +1292,17 @@ class NephilimWindow(Adw.ApplicationWindow):
             self._show_page("classic")
         else:
             self._show_page("details")
+
+    @staticmethod
+    def _count_mods(files, mode):
+        # clean mode only installs primary files, so CC mods don't count there
+        return sum(1 for f in files
+                   if f.get("is_hack") and (mode == "keep-cc" or f.get("is_primary")))
+
+    def _show_mod_banner(self, key, n):
+        self._mod_banner_done = key == "banner_mods_after"
+        self.mod_banner.set_title(t(key, n=n))
+        self.mod_banner.set_revealed(n > 0)
 
     def _run_install(self, file_path, files, mode, progress_bar, install_button,
                       pkg_type="", game_ver="", fallback_to_first=True):
@@ -1308,8 +1333,13 @@ class NephilimWindow(Adw.ApplicationWindow):
                     msg += " " + t("msg_skipped_files", n=len(results['skipped_files']))
                 if results.get("hack_count", 0) > 0:
                     msg += " " + t("msg_mods_detected", n=results['hack_count'])
+                    self._show_mod_banner("banner_mods_after", results['hack_count'])
                 progress_bar.set_text(msg)
-                install_button.set_sensitive(True)
+                # Nothing left to do for this selection: grey the button out
+                # (HIG: disable, don't hide). Changing mode/selection re-enables it.
+                install_button.set_sensitive(False)
+                if results.get("hack_count", 0) == 0 and not self._mod_banner_done:
+                    self.mod_banner.set_revealed(False)  # stale "install only if you trust" warning
 
             GLib.idle_add(update_ui)
 
@@ -1331,6 +1361,7 @@ class NephilimWindow(Adw.ApplicationWindow):
         def do_batch():
             failed = []
             installed = []
+            mods = 0
             for i, pkg in enumerate(queue):
                 idx = i + 1
 
@@ -1341,8 +1372,9 @@ class NephilimWindow(Adw.ApplicationWindow):
                 GLib.idle_add(update_progress, idx, pkg["file_name"])
 
                 try:
-                    install_files(pkg["file_path"], pkg["files"], prefix, pkg["mode"],
-                                  pkg["pkg_type"], pkg["game_ver"])
+                    res = install_files(pkg["file_path"], pkg["files"], prefix, pkg["mode"],
+                                        pkg["pkg_type"], pkg["game_ver"])
+                    mods += res.get("hack_count", 0)
                     installed.append(pkg)
                 except Exception as e:
                     failed.append((pkg["file_name"], str(e)))
@@ -1350,6 +1382,8 @@ class NephilimWindow(Adw.ApplicationWindow):
 
             def done():
                 self._install_in_progress = False
+                if mods:
+                    self._show_mod_banner("banner_mods_after", mods)
                 if failed:
                     self.queue_progress.set_text(
                         t("msg_batch_done", installed=total - len(failed), total=total, failed=len(failed))
